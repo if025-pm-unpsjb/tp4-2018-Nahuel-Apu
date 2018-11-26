@@ -53,9 +53,13 @@ _start:
    ldrb r1, [r0]           // load in r1 the value store in the memory address
                            // [r0], with immediate offset (unsigned byte).
 
-   mov  r2, #0x04          // store ‭the value 0000100‬ in r2, this value is used
+   mov  r2, #0xB4          // store ‭the value 10110100‬ in r2, this value is used
                            // to change the direction mode of the GPIOs pins
-                           // into which the mbed LPC1768 LED1 is connected.
+                           // into which the mbed LPC1768 Leds LPC1768 are connected.
+
+   mov  r3, #0xA0          // store ‭the value ‬10100000 in r3, this value is used
+                           // to change the direction mode of the GPIOs pins
+                           // into which LED3 and LED4 of mbed LPC1768 are connected.
 
    orr  r1, r2             // logical OR between r1 and r2 registers.
 
@@ -65,12 +69,18 @@ _start:
 
    ldr  r1, =0x2009C03E    // clear gpio (FIO1CLR2, see page 136 in LPC17xx manual)
 
-   mov  r2, #0x04          // store the value 0100 in r2
+   mov  r2, #0x14          // store the value 00010100 in r2, this value is used
+                           // to change the direction mode of the GPIOs pins
+                           // into which LED1 and LED2 of mbed LPC1768 are connected.
 
 mainloop:
    strb r2, [r0]           // store the value in r2 in the memory address [r0]
    bl dowait               // execute dowait
    strb r2, [r1]           // store the value in r2 in the memory address [r1]
+   bl   dowait             // execute dowait
+   strb r3, [r0]           // store the value in r3 in the memory address [r0]
+   bl dowait               // execute dowait
+   strb r3, [r1]           // store the value in r3 in the memory address [r1]
    bl   dowait             // execute dowait
    b    mainloop           // goto mainloop
 
